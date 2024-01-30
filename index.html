@@ -2,3 +2,107 @@
 layout: default
 title: Home
 ---
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+    <div class="w-full max-w-xs">
+        <form id="signupForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <h2 class="text-2xl mb-4">Signup</h2>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                    Email
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" name="email" type="text" placeholder="Enter Email" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                    Password
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" type="password" placeholder="Enter Password" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+                    Name
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" name="name" type="text" placeholder="Enter Name" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="dob">
+                    Date of Birth
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="dob" name="dob" type="text" placeholder="Enter DOB (MM-DD-YYYY)" required>
+            </div>
+            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onclick="signup">
+                Signup
+            </button>
+        </form>
+
+        <form id="loginForm" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <h2 class="text-2xl mb-4">Login</h2>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                    Email
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" name="email" type="text" placeholder="Enter Email" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                    Password
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password" name="password" type="password" placeholder="Enter Password" required>
+            </div>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onclick="login">
+                Login
+            </button>
+        </form>
+
+        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onclick="signout">
+            Signout
+        </button>
+    </div>
+
+    <script>
+        const myHeaders = new Headers();
+
+        function signup() {
+            const raw = JSON.stringify({
+                "email": document.forms["signupForm"]["email"].value,
+                "password": document.forms["signupForm"]["password"].value,
+                "name": document.forms["signupForm"]["name"].value,
+                "dob": document.forms["signupForm"]["dob"].value
+            });
+
+            const requestOptions = {
+                method: 'POST',
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch("http://localhost:8085/api/person/post", requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
+        }
+
+        function login() {
+            const raw = JSON.stringify({
+                "email": document.forms["loginForm"]["email"].value,
+                "password": document.forms["loginForm"]["password"].value
+            });
+
+            const requestOptions = {
+                method: 'POST',
+                body: raw,
+                redirect: 'follow'
+            };
+
+            fetch("http://localhost:8085/authenticate", requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
+        }
+
+        function signout() {
+            // Implement signout logic here (e.g., clear cookies, session, etc.)
+            console.log("Signout clicked");
+        }
+    </script>
+</body>
