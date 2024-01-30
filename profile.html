@@ -1,0 +1,67 @@
+---
+layout: default
+title: profile
+---
+
+<div class="hero min-h-screen bg-base-200">
+    <div class="hero-content flex-col lg:flex-row-reverse">
+        <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+            <div class="p-8 space-y-4">
+                <h2 class="text-2xl mb-4">Profile Information</h2>
+                <div>
+                    <strong>Email:</strong> <span id="profileEmail"></span>
+                </div>
+                <div>
+                    <strong>Roles:</strong>
+                    <ul id="profileRoles" class="list-disc pl-6"></ul>
+                </div>
+            </div>
+            <div class="p-4 bg-base-100">
+                <button class="btn btn-outline btn-warning w-full" onclick="signout()">Sign Out</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const token = getCookie("token");
+    if (token) {
+        const decodedToken = parseJwt(token);
+        const userEmail = decodedToken.sub;
+        const userRoles = decodedToken.roles;
+
+        const profileEmailSpan = document.getElementById("profileEmail");
+        profileEmailSpan.innerText = userEmail;
+
+        const profileRolesList = document.getElementById("profileRoles");
+        userRoles.forEach(role => {
+            const listItem = document.createElement("li");
+            listItem.textContent = role;
+            profileRolesList.appendChild(listItem);
+        });
+    } else {
+        window.location.replace("{{ site.baseurl }}/index.html");
+    }
+
+    function signout() {
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+        window.location.replace("{{ site.baseurl }}/index.html");
+    }
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    function parseJwt(token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    }
+</script>
